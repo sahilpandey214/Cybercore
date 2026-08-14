@@ -1,0 +1,3343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>CYBERCORE // Secure Access</title>
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --green:#00ff88;
+    --cyan:#00eaff;
+    --dark:#030706;
+    --panel:#07110d;
+    --border:rgba(0,255,136,.20);
+    --text:#e9fff3;
+    --muted:#789589;
+    --red:#ff5577;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(0,255,136,.08),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(0,234,255,.07),
+            transparent 30%
+        ),
+        var(--dark);
+
+    color:var(--text);
+
+    font-family:
+        Arial,
+        sans-serif;
+
+    overflow-x:hidden;
+}
+
+
+/* =========================
+   ANIMATED GRID
+========================= */
+
+body::before{
+
+    content:"";
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    background-image:
+
+        linear-gradient(
+            rgba(0,255,136,.035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,255,136,.035) 1px,
+            transparent 1px
+        );
+
+    background-size:40px 40px;
+
+    animation:gridMove 12s linear infinite;
+
+    z-index:-1;
+}
+
+@keyframes gridMove{
+
+    from{
+        background-position:0 0;
+    }
+
+    to{
+        background-position:0 40px;
+    }
+}
+
+
+/* =========================
+   GLOW
+========================= */
+
+body::after{
+
+    content:"";
+
+    position:fixed;
+
+    width:300px;
+    height:300px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    filter:blur(150px);
+
+    opacity:.05;
+
+    top:10%;
+    left:30%;
+
+    animation:glowMove 6s infinite alternate;
+
+    pointer-events:none;
+
+    z-index:-1;
+}
+
+@keyframes glowMove{
+
+    from{
+        transform:translate(0,0);
+    }
+
+    to{
+        transform:translate(250px,150px);
+    }
+}
+
+
+/* =========================
+   LOGIN PAGE
+========================= */
+
+#loginPage{
+
+    min-height:100vh;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:30px;
+}
+
+
+.login-container{
+
+    width:1100px;
+
+    max-width:100%;
+
+    display:grid;
+
+    grid-template-columns:1fr 430px;
+
+    gap:70px;
+
+    align-items:center;
+}
+
+
+/* =========================
+   LEFT SIDE
+========================= */
+
+.brand{
+
+    padding:20px;
+}
+
+.logo-symbol{
+
+    width:70px;
+
+    height:70px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:1px solid var(--green);
+
+    color:var(--green);
+
+    font-size:35px;
+
+    box-shadow:
+        0 0 20px rgba(0,255,136,.2);
+
+    margin-bottom:25px;
+
+    animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+
+    0%,100%{
+        box-shadow:
+            0 0 10px rgba(0,255,136,.15);
+    }
+
+    50%{
+        box-shadow:
+            0 0 35px rgba(0,255,136,.35);
+    }
+}
+
+
+.small-title{
+
+    color:var(--green);
+
+    font-size:12px;
+
+    letter-spacing:4px;
+
+    margin-bottom:12px;
+
+    font-family:monospace;
+}
+
+
+.brand h1{
+
+    font-size:75px;
+
+    line-height:1;
+
+    margin-bottom:20px;
+
+    letter-spacing:-4px;
+}
+
+.brand h1 span{
+
+    color:var(--green);
+
+    text-shadow:
+        0 0 15px var(--green);
+}
+
+
+.brand p{
+
+    color:var(--muted);
+
+    line-height:1.7;
+
+    max-width:520px;
+}
+
+
+/* =========================
+   TERMINAL
+========================= */
+
+.terminal{
+
+    margin-top:30px;
+
+    padding:20px;
+
+    background:rgba(0,0,0,.35);
+
+    border:1px solid var(--border);
+
+    font-family:monospace;
+
+    font-size:13px;
+
+    line-height:1.8;
+}
+
+.terminal .green{
+
+    color:var(--green);
+}
+
+.terminal .cyan{
+
+    color:var(--cyan);
+}
+
+.online-dot{
+
+    display:inline-block;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    box-shadow:
+        0 0 12px var(--green);
+
+    margin-right:7px;
+}
+
+
+/* =========================
+   AUTH CARD
+========================= */
+
+.auth-card{
+
+    background:
+        rgba(5,15,10,.88);
+
+    border:1px solid var(--border);
+
+    padding:30px;
+
+    box-shadow:
+        0 20px 80px rgba(0,0,0,.4);
+
+    backdrop-filter:blur(15px);
+
+    position:relative;
+}
+
+.auth-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    height:2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--green),
+            transparent
+        );
+
+    animation:scan 3s linear infinite;
+}
+
+@keyframes scan{
+
+    from{
+        transform:translateX(-100%);
+    }
+
+    to{
+        transform:translateX(100%);
+    }
+}
+
+
+/* =========================
+   TABS
+========================= */
+
+.tabs{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:30px;
+}
+
+.tab{
+
+    padding:10px 14px;
+
+    background:none;
+
+    color:var(--muted);
+
+    border:1px solid transparent;
+
+    cursor:pointer;
+
+    font-family:monospace;
+
+    font-size:12px;
+}
+
+.tab:hover{
+
+    color:var(--green);
+}
+
+.tab.active{
+
+    color:var(--green);
+
+    border-bottom:
+        1px solid var(--green);
+
+    text-shadow:
+        0 0 10px var(--green);
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form{
+
+    display:none;
+}
+
+.form.active{
+
+    display:block;
+
+    animation:fade .3s ease;
+}
+
+@keyframes fade{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+
+.form h2{
+
+    font-size:32px;
+
+    margin-bottom:8px;
+}
+
+
+.muted{
+
+    color:var(--muted);
+
+    font-size:14px;
+
+    line-height:1.6;
+}
+
+
+label{
+
+    display:block;
+
+    margin-top:18px;
+
+    margin-bottom:7px;
+
+    color:#9cbcae;
+
+    font-family:monospace;
+
+    font-size:12px;
+}
+
+
+input{
+
+    width:100%;
+
+    padding:14px;
+
+    color:white;
+
+    background:
+        rgba(0,0,0,.45);
+
+    border:
+        1px solid rgba(0,255,136,.18);
+
+    outline:none;
+
+    transition:.2s;
+}
+
+
+input:focus{
+
+    border-color:var(--green);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(0,255,136,.05),
+
+        0 0 15px
+        rgba(0,255,136,.08);
+}
+
+
+button{
+
+    font-family:inherit;
+}
+
+
+.primary{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-top:22px;
+
+    border:1px solid var(--green);
+
+    background:
+        rgba(0,255,136,.08);
+
+    color:var(--green);
+
+    cursor:pointer;
+
+    font-family:monospace;
+
+    transition:.2s;
+}
+
+.primary:hover{
+
+    background:var(--green);
+
+    color:#001509;
+
+    box-shadow:
+        0 0 25px
+        rgba(0,255,136,.3);
+}
+
+
+.message{
+
+    min-height:20px;
+
+    margin-top:12px;
+
+    font-size:13px;
+
+    color:var(--muted);
+}
+
+.message.success{
+
+    color:var(--green);
+}
+
+.message.error{
+
+    color:var(--red);
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+#dashboard{
+
+    display:none;
+
+    min-height:100vh;
+
+    grid-template-columns:240px 1fr;
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+
+    min-height:100vh;
+
+    background:
+        rgba(2,9,6,.94);
+
+    border-right:
+        1px solid var(--border);
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    position:sticky;
+
+    top:0;
+}
+
+
+.side-logo{
+
+    font-family:monospace;
+
+    font-size:18px;
+
+    margin-bottom:25px;
+}
+
+.side-logo span{
+
+    color:var(--green);
+}
+
+
+.user-box{
+
+    border:
+        1px solid var(--border);
+
+    padding:12px;
+
+    display:flex;
+
+    gap:10px;
+
+    align-items:center;
+}
+
+
+.avatar{
+
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border:
+        1px solid var(--green);
+
+    color:var(--green);
+
+    font-weight:bold;
+
+    box-shadow:
+        0 0 15px
+        rgba(0,255,136,.1);
+}
+
+
+.user-box p{
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    margin-top:4px;
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+.nav{
+
+    margin-top:25px;
+
+    display:grid;
+
+    gap:5px;
+}
+
+
+.nav button{
+
+    text-align:left;
+
+    padding:12px;
+
+    background:none;
+
+    border:1px solid transparent;
+
+    color:var(--muted);
+
+    cursor:pointer;
+}
+
+
+.nav button:hover,
+.nav button.active{
+
+    color:var(--green);
+
+    background:
+        rgba(0,255,136,.06);
+
+    border-color:var(--border);
+}
+
+
+.logout{
+
+    margin-top:auto;
+
+    padding:12px;
+
+    background:none;
+
+    border:1px solid rgba(255,85,119,.3);
+
+    color:var(--red);
+
+    cursor:pointer;
+}
+
+.logout:hover{
+
+    background:
+        rgba(255,85,119,.1);
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+
+    padding:35px;
+
+    max-width:1400px;
+
+    width:100%;
+
+    margin:auto;
+}
+
+
+.topbar{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:25px;
+}
+
+
+.topbar h1{
+
+    font-size:34px;
+}
+
+
+.status{
+
+    color:var(--green);
+
+    font-family:monospace;
+
+    font-size:12px;
+}
+
+
+.status span{
+
+    display:inline-block;
+
+    width:8px;
+
+    height:8px;
+
+    border-radius:50%;
+
+    background:var(--green);
+
+    box-shadow:
+        0 0 12px var(--green);
+
+    margin-right:5px;
+}
+
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section{
+
+    display:none;
+
+    animation:fade .3s ease;
+}
+
+.section.active{
+
+    display:block;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+
+    padding:30px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(5,15,10,.85);
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+
+.hero h2{
+
+    font-size:38px;
+
+    margin:10px 0;
+}
+
+.hero h2 span{
+
+    color:var(--green);
+}
+
+
+.hero p{
+
+    color:var(--muted);
+}
+
+
+.scan-text{
+
+    color:var(--cyan);
+
+    font-family:monospace;
+
+    text-align:right;
+}
+
+.scan-text b{
+
+    color:var(--green);
+
+    font-size:30px;
+}
+
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:15px;
+
+    margin:18px 0;
+}
+
+
+.stat{
+
+    padding:20px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(5,15,10,.75);
+}
+
+
+.stat small{
+
+    color:var(--muted);
+
+    font-family:monospace;
+}
+
+.stat strong{
+
+    display:block;
+
+    color:var(--green);
+
+    margin:10px 0;
+}
+
+.stat p{
+
+    color:var(--muted);
+
+    font-size:12px;
+}
+
+
+/* =========================
+   PANEL
+========================= */
+
+.panel{
+
+    padding:25px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(5,15,10,.75);
+}
+
+
+.panel h2{
+
+    margin:10px 0;
+}
+
+
+.panel p{
+
+    color:var(--muted);
+
+    line-height:1.7;
+}
+
+
+/* =========================
+   INFO GRID
+========================= */
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:15px;
+
+    margin-top:20px;
+}
+
+
+.info{
+
+    padding:15px;
+
+    border:
+        1px solid var(--border);
+}
+
+
+.info span{
+
+    display:block;
+
+    color:var(--muted);
+
+    font-family:monospace;
+
+    font-size:11px;
+}
+
+
+.info b{
+
+    display:block;
+
+    margin-top:8px;
+
+    word-break:break-word;
+}
+
+
+/* =========================
+   PROJECTS
+========================= */
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:15px;
+}
+
+
+.card{
+
+    padding:25px;
+
+    min-height:180px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(5,15,10,.75);
+
+    transition:.2s;
+}
+
+
+.card:hover{
+
+    transform:
+        translateY(-5px);
+
+    border-color:var(--green);
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,255,136,.08);
+}
+
+
+.card small{
+
+    color:var(--green);
+
+    font-family:monospace;
+}
+
+
+.card h3{
+
+    margin-top:30px;
+
+    margin-bottom:10px;
+}
+
+
+.card p{
+
+    color:var(--muted);
+
+    line-height:1.6;
+}
+
+
+/* =========================
+   REPOSITORIES
+========================= */
+
+.repo{
+
+    padding:20px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(5,15,10,.75);
+
+    margin-bottom:12px;
+}
+
+
+.repo-title{
+
+    display:flex;
+
+    justify-content:space-between;
+}
+
+
+.repo-title b{
+
+    color:var(--cyan);
+}
+
+
+.public{
+
+    color:var(--green);
+
+    border:
+        1px solid var(--border);
+
+    padding:4px 7px;
+
+    font-family:monospace;
+
+    font-size:10px;
+}
+
+
+.repo p{
+
+    color:var(--muted);
+
+    margin:15px 0;
+}
+
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.activity{
+
+    border-left:
+        1px solid var(--border);
+
+    padding-left:20px;
+}
+
+
+.activity p{
+
+    padding:15px 0;
+
+    color:var(--muted);
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.activity b{
+
+    color:var(--green);
+
+    font-family:monospace;
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+.setting{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:15px;
+
+    border:
+        1px solid var(--border);
+
+    margin-top:10px;
+
+    color:var(--muted);
+}
+
+
+.setting b{
+
+    color:var(--green);
+
+    font-family:monospace;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
+    .login-container{
+
+        grid-template-columns:1fr;
+
+        gap:30px;
+    }
+
+
+    .brand{
+
+        text-align:center;
+    }
+
+
+    .logo-symbol{
+
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+
+    .brand h1{
+
+        font-size:55px;
+    }
+
+
+    #dashboard{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .sidebar{
+
+        min-height:auto;
+
+        position:relative;
+    }
+
+
+    .nav{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .stats{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+
+    .cards{
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+}
+
+
+@media(max-width:550px){
+
+    #loginPage{
+
+        padding:15px;
+    }
+
+
+    .auth-card{
+
+        padding:20px;
+    }
+
+
+    .stats,
+    .cards,
+    .info-grid{
+
+        grid-template-columns:1fr;
+    }
+
+
+    .hero{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:20px;
+    }
+
+
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:15px;
+    }
+
+
+    .content{
+
+        padding:20px;
+    }
+
+}
+
+
+/* =====================================================
+   CYBERCORE INTRO / SPLASH SCREEN
+   ===================================================== */
+
+#introScreen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(0,255,136,.12), transparent 28%),
+        radial-gradient(circle at 50% 55%, rgba(0,234,255,.08), transparent 42%),
+        #030706;
+    cursor:pointer;
+    user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:opacity .7s ease, visibility .7s ease;
+}
+
+#introScreen.hidden{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.intro-grid{
+    position:absolute;
+    inset:-50%;
+    background-image:
+        linear-gradient(rgba(0,255,136,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,.045) 1px, transparent 1px);
+    background-size:42px 42px;
+    transform:perspective(500px) rotateX(58deg) translateY(10%);
+    animation:introGridMove 8s linear infinite;
+}
+
+@keyframes introGridMove{
+    from{transform:perspective(500px) rotateX(58deg) translateY(10%) translateY(0);}
+    to{transform:perspective(500px) rotateX(58deg) translateY(10%) translateY(42px);}
+}
+
+.intro-scanlines{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(0,255,136,.025) 4px
+    );
+}
+
+.intro-content{
+    position:relative;
+    z-index:2;
+    width:min(760px,90%);
+    text-align:center;
+    padding:40px 20px;
+}
+
+.intro-symbol{
+    width:110px;
+    height:110px;
+    margin:0 auto 28px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:1px solid var(--green);
+    color:var(--green);
+    font-size:55px;
+    box-shadow:
+        0 0 25px rgba(0,255,136,.25),
+        inset 0 0 25px rgba(0,255,136,.08);
+    animation:introPulse 1.8s infinite;
+    position:relative;
+}
+
+.intro-symbol::before,
+.intro-symbol::after{
+    content:"";
+    position:absolute;
+    inset:-12px;
+    border:1px solid rgba(0,234,255,.25);
+    animation:introRotate 6s linear infinite;
+}
+
+.intro-symbol::after{
+    inset:-22px;
+    border-color:rgba(0,255,136,.12);
+    animation-direction:reverse;
+    animation-duration:9s;
+}
+
+@keyframes introPulse{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 0 20px rgba(0,255,136,.2), inset 0 0 20px rgba(0,255,136,.05);
+    }
+    50%{
+        transform:scale(1.05);
+        box-shadow:0 0 55px rgba(0,255,136,.45), inset 0 0 35px rgba(0,255,136,.12);
+    }
+}
+
+@keyframes introRotate{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+.intro-kicker{
+    color:var(--green);
+    font-family:monospace;
+    font-size:12px;
+    letter-spacing:5px;
+    margin-bottom:14px;
+    animation:introFlicker 2.5s infinite;
+}
+
+.intro-title{
+    margin:0;
+    font-size:clamp(48px,10vw,100px);
+    line-height:.95;
+    letter-spacing:-5px;
+    color:var(--text);
+    text-shadow:0 0 20px rgba(0,255,136,.12);
+}
+
+.intro-title span{
+    color:var(--green);
+    text-shadow:0 0 20px var(--green);
+}
+
+.intro-subtitle{
+    margin:22px auto 0;
+    max-width:570px;
+    color:var(--muted);
+    font-family:monospace;
+    line-height:1.7;
+    font-size:13px;
+}
+
+.intro-terminal{
+    width:min(500px,100%);
+    margin:28px auto 0;
+    padding:15px 18px;
+    border:1px solid var(--border);
+    background:rgba(0,0,0,.38);
+    color:var(--muted);
+    font-family:monospace;
+    font-size:12px;
+    text-align:left;
+    box-shadow:0 10px 45px rgba(0,0,0,.25);
+}
+
+.intro-terminal .i-green{color:var(--green);}
+.intro-terminal .i-cyan{color:var(--cyan);}
+
+.intro-progress{
+    width:min(360px,75%);
+    height:2px;
+    margin:24px auto 0;
+    background:rgba(0,255,136,.12);
+    overflow:hidden;
+}
+
+.intro-progress::after{
+    content:"";
+    display:block;
+    width:45%;
+    height:100%;
+    background:var(--green);
+    box-shadow:0 0 12px var(--green);
+    animation:introProgress 1.7s ease-in-out infinite;
+}
+
+@keyframes introProgress{
+    from{transform:translateX(-120%);}
+    to{transform:translateX(330%);}
+}
+
+.intro-enter{
+    display:inline-block;
+    margin-top:28px;
+    padding:13px 24px;
+    border:1px solid var(--green);
+    color:var(--green);
+    background:rgba(0,255,136,.06);
+    font-family:monospace;
+    font-size:12px;
+    letter-spacing:2px;
+    box-shadow:0 0 20px rgba(0,255,136,.08);
+    animation:introButtonPulse 1.6s infinite;
+}
+
+@keyframes introButtonPulse{
+    0%,100%{box-shadow:0 0 10px rgba(0,255,136,.08);}
+    50%{box-shadow:0 0 28px rgba(0,255,136,.22);}
+}
+
+.intro-hint{
+    margin-top:12px;
+    color:#4d6b60;
+    font-family:monospace;
+    font-size:10px;
+    letter-spacing:1px;
+}
+
+@keyframes introFlicker{
+    0%,100%{opacity:1;}
+    45%{opacity:1;}
+    48%{opacity:.55;}
+    50%{opacity:1;}
+}
+
+@media(max-width:550px){
+    .intro-content{padding:25px 10px;}
+    .intro-symbol{width:85px;height:85px;font-size:42px;margin-bottom:22px;}
+    .intro-title{letter-spacing:-3px;}
+    .intro-subtitle{font-size:11px;}
+    .intro-terminal{font-size:10px;}
+    .intro-enter{padding:12px 18px;}
+}
+
+
+/* =====================================================
+   AUTO RESPONSIVE / DEVICE FIT
+   ===================================================== */
+
+html, body{
+    width:100%;
+    max-width:100%;
+}
+
+body{
+    min-width:0;
+}
+
+img, video, canvas, iframe{
+    max-width:100%;
+}
+
+button, input{
+    max-width:100%;
+}
+
+@media(max-width:1100px){
+    .login-container{
+        width:100%;
+        grid-template-columns:minmax(0,1fr) 430px;
+        gap:35px;
+    }
+
+    .brand h1{
+        font-size:clamp(48px,7vw,75px);
+    }
+}
+
+@media(max-width:850px){
+    #loginPage{
+        min-height:100svh;
+        min-height:100dvh;
+        padding:24px 16px;
+        overflow-y:auto;
+    }
+
+    .login-container{
+        width:100%;
+        grid-template-columns:1fr;
+        gap:25px;
+    }
+
+    .brand{
+        padding:10px;
+    }
+
+    .brand h1{
+        font-size:clamp(42px,12vw,60px);
+    }
+
+    .brand p{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .terminal{
+        max-width:600px;
+        margin-left:auto;
+        margin-right:auto;
+        text-align:left;
+    }
+
+    .auth-card{
+        width:100%;
+        max-width:520px;
+        margin:0 auto;
+    }
+
+    #dashboard{
+        min-height:100svh;
+        min-height:100dvh;
+    }
+
+    .sidebar{
+        min-height:auto;
+    }
+
+    .content{
+        min-width:0;
+    }
+
+    .hero{
+        flex-wrap:wrap;
+    }
+}
+
+@media(max-width:550px){
+    #loginPage{
+        padding:14px 10px 25px;
+        align-items:flex-start;
+    }
+
+    .brand{
+        padding:5px;
+    }
+
+    .logo-symbol{
+        width:58px;
+        height:58px;
+        font-size:28px;
+        margin-bottom:16px;
+    }
+
+    .small-title{
+        font-size:10px;
+        letter-spacing:2.5px;
+    }
+
+    .brand h1{
+        font-size:clamp(38px,14vw,54px);
+        letter-spacing:-2px;
+    }
+
+    .brand p{
+        font-size:13px;
+        line-height:1.55;
+    }
+
+    .terminal{
+        margin-top:20px;
+        padding:14px;
+        font-size:11px;
+        line-height:1.65;
+    }
+
+    .auth-card{
+        padding:18px;
+    }
+
+    .form h2{
+        font-size:27px;
+    }
+
+    input{
+        padding:13px;
+        font-size:16px; /* prevents iPhone/Android browser zoom on input */
+    }
+
+    .primary{
+        padding:14px;
+    }
+
+    .nav{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .content{
+        padding:15px;
+    }
+
+    .topbar h1{
+        font-size:28px;
+    }
+
+    .hero{
+        padding:20px;
+    }
+
+    .hero h2{
+        font-size:30px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .intro-content{
+        width:94%;
+        padding:18px 8px;
+    }
+}
+
+@media(max-width:380px){
+    .auth-card{
+        padding:15px;
+    }
+
+    .nav{
+        grid-template-columns:1fr;
+    }
+
+    .intro-title{
+        font-size:44px;
+    }
+
+    .intro-terminal{
+        padding:12px;
+        font-size:9px;
+    }
+
+    .intro-enter{
+        font-size:10px;
+        letter-spacing:1px;
+    }
+}
+
+/* Landscape phones */
+@media(max-height:600px) and (orientation:landscape){
+    #introScreen{
+        overflow-y:auto;
+    }
+
+    .intro-content{
+        padding:20px 10px;
+    }
+
+    .intro-symbol{
+        width:65px;
+        height:65px;
+        font-size:32px;
+        margin-bottom:12px;
+    }
+
+    .intro-subtitle{
+        margin-top:10px;
+    }
+
+    .intro-terminal{
+        margin-top:12px;
+    }
+
+    .intro-enter{
+        margin-top:12px;
+    }
+
+    #loginPage{
+        align-items:flex-start;
+    }
+}
+
+/* Touch devices */
+@media(hover:none) and (pointer:coarse){
+    button,
+    .intro-enter,
+    input{
+        touch-action:manipulation;
+    }
+
+    .primary,
+    .tab,
+    .nav button,
+    .logout{
+        min-height:44px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     CYBERCORE INTRO / SPLASH SCREEN
+     Tap or click to enter the login page
+     ===================================================== -->
+<div id="introScreen" role="button" tabindex="0" aria-label="Enter CYBERCORE">
+    <div class="intro-grid"></div>
+    <div class="intro-scanlines"></div>
+
+    <div class="intro-content">
+        <div class="intro-symbol">⌬</div>
+
+        <div class="intro-kicker">INITIALIZING SECURE ACCESS</div>
+
+        <h1 class="intro-title">
+            CYBER<span>CORE</span>
+        </h1>
+
+        <p class="intro-subtitle">
+            DEVELOPER COMMAND CENTER // SECURE WORKSPACE
+        </p>
+
+        <div class="intro-terminal">
+            <div>&gt; system.boot: <span class="i-green">ONLINE</span></div>
+            <div>&gt; encryption: <span class="i-cyan">ACTIVE</span></div>
+            <div>&gt; authentication: <span class="i-green">READY</span></div>
+            <div>&gt; interface: <span class="i-green">WAITING FOR INPUT</span></div>
+        </div>
+
+        <div class="intro-progress"></div>
+
+        <div class="intro-enter">[ TAP / CLICK TO ENTER ]</div>
+        <div class="intro-hint">TOUCH ANYWHERE TO CONTINUE</div>
+    </div>
+</div>
+
+
+
+<!-- =====================================================
+     LOGIN / REGISTER PAGE
+===================================================== -->
+
+<div id="loginPage">
+
+
+<div class="login-container">
+
+
+<!-- LEFT -->
+
+<section class="brand">
+
+<div class="logo-symbol">
+    ⌬
+</div>
+
+
+<div class="small-title">
+    SECURE ACCESS // 01
+</div>
+
+
+<h1>
+    CYBER<span>CORE</span>
+</h1>
+
+
+<p>
+    Developer command center with
+    a cyber security inspired interface.
+</p>
+
+
+<div class="terminal">
+
+    <div>
+        <span class="online-dot"></span>
+        system.status
+    </div>
+
+    <div>
+        &gt; authentication:
+        <span class="green">
+            ONLINE
+        </span>
+    </div>
+
+    <div>
+        &gt; security:
+        <span class="green">
+            PROTECTED
+        </span>
+    </div>
+
+    <div>
+        &gt; encryption:
+        <span class="cyan">
+            ACTIVE
+        </span>
+    </div>
+
+    <div>
+        &gt; system:
+        <span class="green">
+            READY
+        </span>
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- RIGHT -->
+
+<section class="auth-card">
+
+
+<div class="tabs">
+
+<button
+    class="tab active"
+    onclick="showForm('login')">
+
+    LOGIN
+
+</button>
+
+
+<button
+    class="tab"
+    onclick="showForm('register')">
+
+    CREATE PROFILE
+
+</button>
+
+</div>
+
+
+<!-- LOGIN FORM -->
+
+<form
+    id="loginForm"
+    class="form active"
+    onsubmit="login(event)">
+
+
+<div class="small-title">
+    AUTHENTICATION
+</div>
+
+
+<h2>
+    Welcome back
+</h2>
+
+
+<p class="muted">
+    Login using your registered
+    email/mobile and password.
+</p>
+
+
+<label>
+    Email or Mobile
+</label>
+
+
+<input
+    id="loginId"
+    type="text"
+    placeholder="you@example.com / 9876543210"
+    required
+>
+
+
+<label>
+    Password
+</label>
+
+
+<input
+    id="loginPassword"
+    type="password"
+    placeholder="••••••••"
+    required
+>
+
+
+<button
+    class="primary"
+    type="submit">
+
+    ACCESS DASHBOARD →
+
+</button>
+
+
+<div
+    id="loginMessage"
+    class="message">
+</div>
+
+
+</form>
+
+
+<!-- REGISTER FORM -->
+
+<form
+    id="registerForm"
+    class="form"
+    onsubmit="register(event)">
+
+
+<div class="small-title">
+    NEW OPERATOR
+</div>
+
+
+<h2>
+    Create your profile
+</h2>
+
+
+<p class="muted">
+    Create your profile before
+    accessing the dashboard.
+</p>
+
+
+<label>
+    Full Name
+</label>
+
+
+<input
+    id="name"
+    type="text"
+    placeholder="Your name"
+    required
+>
+
+
+<label>
+    Email
+</label>
+
+
+<input
+    id="email"
+    type="email"
+    placeholder="you@example.com"
+    required
+>
+
+
+<label>
+    Mobile Number
+</label>
+
+
+<input
+    id="mobile"
+    type="tel"
+    maxlength="10"
+    placeholder="10 digit mobile"
+    required
+>
+
+
+<label>
+    Password
+</label>
+
+
+<input
+    id="password"
+    type="password"
+    minlength="8"
+    placeholder="Minimum 8 characters"
+    required
+>
+
+
+<label>
+    Confirm Password
+</label>
+
+
+<input
+    id="confirmPassword"
+    type="password"
+    minlength="8"
+    placeholder="Repeat password"
+    required
+>
+
+
+<button
+    class="primary"
+    type="submit">
+
+    CREATE PROFILE →
+
+</button>
+
+
+<div
+    id="registerMessage"
+    class="message">
+</div>
+
+
+</form>
+
+
+</section>
+
+</div>
+
+</div>
+
+
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<div id="dashboard">
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+
+<div class="side-logo">
+
+    ⌬ CYBER<span>CORE</span>
+
+</div>
+
+
+<div class="user-box">
+
+<div
+    class="avatar"
+    id="avatar">
+
+    C
+
+</div>
+
+
+<div>
+
+<strong id="sideName">
+    Operator
+</strong>
+
+<p>
+    ● online · secure
+</p>
+
+</div>
+
+</div>
+
+
+<div class="nav">
+
+
+<button
+    class="active"
+    onclick="openSection(
+        'overview',
+        this
+    )">
+
+    ⌂ Overview
+
+</button>
+
+
+<button
+    onclick="openSection(
+        'profile',
+        this
+    )">
+
+    ◉ Profile
+
+</button>
+
+
+<button
+    onclick="openSection(
+        'projects',
+        this
+    )">
+
+    ◈ Projects
+
+</button>
+
+
+<button
+    onclick="openSection(
+        'activity',
+        this
+    )">
+
+    ⌁ Activity
+
+</button>
+
+
+<button
+    onclick="openSection(
+        'repositories',
+        this
+    )">
+
+    ▣ Repositories
+
+</button>
+
+
+<button
+    onclick="openSection(
+        'settings',
+        this
+    )">
+
+    ⚙ Settings
+
+</button>
+
+</div>
+
+
+<button
+    class="logout"
+    onclick="logout()">
+
+    ↪ LOGOUT
+
+</button>
+
+
+</aside>
+
+
+<!-- CONTENT -->
+
+<main class="content">
+
+
+<header class="topbar">
+
+<div>
+
+<div class="small-title">
+    COMMAND CENTER
+</div>
+
+<h1 id="pageTitle">
+    Overview
+</h1>
+
+</div>
+
+
+<div class="status">
+
+<span></span>
+
+SYSTEM ONLINE
+
+</div>
+
+</header>
+
+
+<!-- OVERVIEW -->
+
+<section
+    id="overview"
+    class="section active">
+
+
+<div class="hero">
+
+
+<div>
+
+<div class="small-title">
+    ACCESS GRANTED
+</div>
+
+
+<h2>
+
+Welcome,
+
+<span id="welcomeName">
+    Operator
+</span>
+
+</h2>
+
+
+<p>
+    Your profile is authenticated
+    and your workspace is ready.
+</p>
+
+</div>
+
+
+<div class="scan-text">
+
+SCANNING
+
+<br>
+
+<b>
+100%
+</b>
+
+</div>
+
+
+</div>
+
+
+<div class="stats">
+
+
+<div class="stat">
+
+<small>
+    ACCOUNT
+</small>
+
+<strong>
+    ACTIVE
+</strong>
+
+<p>
+    Protected session
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+    STORAGE
+</small>
+
+<strong>
+    EXCEL
+</strong>
+
+<p>
+    Ready for migration
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+    SECURITY
+</small>
+
+<strong>
+    BCrypt
+</strong>
+
+<p>
+    Password hashing
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+    STATUS
+</small>
+
+<strong>
+    ONLINE
+</strong>
+
+<p>
+    Command center connected
+</p>
+
+</div>
+
+
+</div>
+
+
+<div class="panel">
+
+<div class="small-title">
+    QUICK INFO
+</div>
+
+<h2>
+    Developer Workspace
+</h2>
+
+<p>
+    Use the sidebar to explore
+    your profile, projects,
+    activity and repositories.
+</p>
+
+</div>
+
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section
+    id="profile"
+    class="section">
+
+
+<div class="panel">
+
+<div class="small-title">
+    IDENTITY
+</div>
+
+
+<h2 id="profileName">
+    Operator
+</h2>
+
+
+<div class="info-grid">
+
+
+<div class="info">
+
+<span>
+    EMAIL
+</span>
+
+<b id="profileEmail">
+    -
+</b>
+
+</div>
+
+
+<div class="info">
+
+<span>
+    MOBILE
+</span>
+
+<b id="profileMobile">
+    -
+</b>
+
+</div>
+
+
+<div class="info">
+
+<span>
+    ACCOUNT ID
+</span>
+
+<b id="profileId">
+    -
+</b>
+
+</div>
+
+
+<div class="info">
+
+<span>
+    CREATED
+</span>
+
+<b id="profileCreated">
+    -
+</b>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- PROJECTS -->
+
+<section
+    id="projects"
+    class="section">
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<small>
+    01 // WEB
+</small>
+
+<h3>
+    Cyber Portfolio
+</h3>
+
+<p>
+    Build and showcase your
+    developer projects.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<small>
+    02 // CODE
+</small>
+
+<h3>
+    C / C++ Lab
+</h3>
+
+<p>
+    Practice programming and
+    upload your work.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<small>
+    03 // SECURITY
+</small>
+
+<h3>
+    Security Lab
+</h3>
+
+<p>
+    Learn ethical security
+    concepts in legal labs.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ACTIVITY -->
+
+<section
+    id="activity"
+    class="section">
+
+
+<div class="panel">
+
+<div class="small-title">
+    RECENT EVENTS
+</div>
+
+
+<div class="activity">
+
+<p>
+    <b>LOGIN</b>
+    authenticated session started
+</p>
+
+
+<p>
+    <b>PROFILE</b>
+    account identity loaded
+</p>
+
+
+<p>
+    <b>STORAGE</b>
+    Excel data layer available
+</p>
+
+
+<p>
+    <b>SYSTEM</b>
+    dashboard initialized
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- REPOSITORIES -->
+
+<section
+    id="repositories"
+    class="section">
+
+
+<div class="repo">
+
+
+<div class="repo-title">
+
+<b>
+    cyber-dashboard
+</b>
+
+<span class="public">
+    PUBLIC
+</span>
+
+</div>
+
+
+<p>
+    Authentication and dashboard
+    starter project.
+</p>
+
+
+<small>
+    HTML · CSS · JavaScript
+</small>
+
+</div>
+
+
+<div class="repo">
+
+
+<div class="repo-title">
+
+<b>
+    c-programming
+</b>
+
+<span class="public">
+    PUBLIC
+</span>
+
+</div>
+
+
+<p>
+    BCA programming practice
+    repository.
+</p>
+
+
+<small>
+    C · GCC
+</small>
+
+</div>
+
+
+</section>
+
+
+
+<!-- SETTINGS -->
+
+<section
+    id="settings"
+    class="section">
+
+
+<div class="panel">
+
+<div class="small-title">
+    CONFIGURATION
+</div>
+
+
+<h2>
+    System Settings
+</h2>
+
+
+<p>
+    This interface is designed so
+    a real database can be connected
+    later.
+</p>
+
+
+<div class="setting">
+
+<span>
+    Theme
+</span>
+
+<b>
+    CYBER DARK
+</b>
+
+</div>
+
+
+<div class="setting">
+
+<span>
+    Authentication
+</span>
+
+<b>
+    SESSION
+</b>
+
+</div>
+
+
+<div class="setting">
+
+<span>
+    Storage
+</span>
+
+<b>
+    EXCEL
+</b>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+</main>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   TEMPORARY FRONTEND DATA
+===================================================== */
+
+let users =
+    JSON.parse(
+        localStorage.getItem(
+            "cyberUsers"
+        )
+    ) || [];
+
+
+let currentUser = null;
+
+
+/* =====================================================
+   SWITCH LOGIN / REGISTER
+===================================================== */
+
+function showForm(type){
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+    const registerForm =
+        document.getElementById(
+            "registerForm"
+        );
+
+    const tabs =
+        document.querySelectorAll(
+            ".tab"
+        );
+
+
+    tabs.forEach(tab =>
+        tab.classList.remove(
+            "active"
+        )
+    );
+
+
+    if(type === "login"){
+
+        loginForm.classList.add(
+            "active"
+        );
+
+        registerForm.classList.remove(
+            "active"
+        );
+
+        tabs[0].classList.add(
+            "active"
+        );
+
+    }else{
+
+        registerForm.classList.add(
+            "active"
+        );
+
+        loginForm.classList.remove(
+            "active"
+        );
+
+        tabs[1].classList.add(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   REGISTER
+===================================================== */
+
+function register(event){
+
+    event.preventDefault();
+
+
+    const name =
+        document.getElementById(
+            "name"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "email"
+        ).value.trim().toLowerCase();
+
+
+    const mobile =
+        document.getElementById(
+            "mobile"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "password"
+        ).value;
+
+
+    const confirmPassword =
+        document.getElementById(
+            "confirmPassword"
+        ).value;
+
+
+    const message =
+        document.getElementById(
+            "registerMessage"
+        );
+
+
+    /* PASSWORD CHECK */
+
+    if(password.length < 8){
+
+        message.textContent =
+            "Password must contain at least 8 characters.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    /* CONFIRM PASSWORD */
+
+    if(password !== confirmPassword){
+
+        message.textContent =
+            "Passwords do not match.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    /* MOBILE CHECK */
+
+    if(!/^[0-9]{10}$/.test(mobile)){
+
+        message.textContent =
+            "Mobile number must contain 10 digits.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    /* DUPLICATE EMAIL */
+
+    const emailExists =
+        users.some(
+            user =>
+                user.email === email
+        );
+
+
+    if(emailExists){
+
+        message.textContent =
+            "This email is already registered.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    /* DUPLICATE MOBILE */
+
+    const mobileExists =
+        users.some(
+            user =>
+                user.mobile === mobile
+        );
+
+
+    if(mobileExists){
+
+        message.textContent =
+            "This mobile number is already registered.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    /* CREATE USER */
+
+    const user = {
+
+        id:
+            users.length + 1,
+
+        name:name,
+
+        email:email,
+
+        mobile:mobile,
+
+        password:password,
+
+        created:
+            new Date().toLocaleString()
+
+    };
+
+
+    users.push(user);
+
+
+    localStorage.setItem(
+        "cyberUsers",
+        JSON.stringify(users)
+    );
+
+
+    message.textContent =
+        "Profile created successfully.";
+
+    message.className =
+        "message success";
+
+
+    document
+        .getElementById(
+            "registerForm"
+        )
+        .reset();
+
+
+    setTimeout(
+        () => showForm("login"),
+        1000
+    );
+
+}
+
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+function login(event){
+
+    event.preventDefault();
+
+
+    const identifier =
+        document.getElementById(
+            "loginId"
+        ).value.trim().toLowerCase();
+
+
+    const password =
+        document.getElementById(
+            "loginPassword"
+        ).value;
+
+
+    const message =
+        document.getElementById(
+            "loginMessage"
+        );
+
+
+    const user =
+        users.find(
+            u =>
+                (
+                    u.email === identifier ||
+                    u.mobile === identifier
+                )
+                &&
+                u.password === password
+        );
+
+
+    if(!user){
+
+        message.textContent =
+            "Invalid email/mobile or password.";
+
+        message.className =
+            "message error";
+
+        return;
+    }
+
+
+    currentUser = user;
+
+
+    message.textContent =
+        "ACCESS GRANTED.";
+
+    message.className =
+        "message success";
+
+
+    setTimeout(
+        openDashboard,
+        500
+    );
+
+}
+
+
+/* =====================================================
+   OPEN DASHBOARD
+===================================================== */
+
+function openDashboard(){
+
+    document.getElementById(
+        "loginPage"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "dashboard"
+    ).style.display = "grid";
+
+
+    loadUserData();
+
+}
+
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+function loadUserData(){
+
+    document.getElementById(
+        "welcomeName"
+    ).textContent =
+        currentUser.name;
+
+
+    document.getElementById(
+        "sideName"
+    ).textContent =
+        currentUser.name;
+
+
+    document.getElementById(
+        "avatar"
+    ).textContent =
+        currentUser.name
+            .charAt(0)
+            .toUpperCase();
+
+
+    document.getElementById(
+        "profileName"
+    ).textContent =
+        currentUser.name;
+
+
+    document.getElementById(
+        "profileEmail"
+    ).textContent =
+        currentUser.email;
+
+
+    document.getElementById(
+        "profileMobile"
+    ).textContent =
+        currentUser.mobile;
+
+
+    document.getElementById(
+        "profileId"
+    ).textContent =
+        "#" + currentUser.id;
+
+
+    document.getElementById(
+        "profileCreated"
+    ).textContent =
+        currentUser.created;
+
+}
+
+
+/* =====================================================
+   DASHBOARD NAVIGATION
+===================================================== */
+
+function openSection(
+    sectionName,
+    button
+){
+
+    document
+        .querySelectorAll(
+            ".nav button"
+        )
+        .forEach(btn =>
+            btn.classList.remove(
+                "active"
+            )
+        );
+
+
+    document
+        .querySelectorAll(
+            ".section"
+        )
+        .forEach(section =>
+            section.classList.remove(
+                "active"
+            )
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    document
+        .getElementById(
+            sectionName
+        )
+        .classList.add(
+            "active"
+        );
+
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
+        button.textContent.trim();
+
+}
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+function logout(){
+
+    currentUser = null;
+
+
+    document.getElementById(
+        "dashboard"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "loginPage"
+    ).style.display = "flex";
+
+
+    document.getElementById(
+        "loginForm"
+    ).reset();
+
+
+    showForm("login");
+
+}
+
+
+/* =====================================================
+   INTRO / SPLASH SCREEN
+   ===================================================== */
+
+const introScreen = document.getElementById("introScreen");
+
+function enterCyberCore(){
+    if(!introScreen || introScreen.classList.contains("hidden")) return;
+
+    introScreen.classList.add("hidden");
+
+    setTimeout(() => {
+        introScreen.style.display = "none";
+
+        const loginPage = document.getElementById("loginPage");
+        if(loginPage){
+            loginPage.style.display = "flex";
+        }
+
+        const loginId = document.getElementById("loginId");
+        if(loginId){
+            loginId.focus();
+        }
+    }, 700);
+}
+
+if(introScreen){
+    introScreen.addEventListener("click", enterCyberCore);
+
+    introScreen.addEventListener("keydown", function(event){
+        if(event.key === "Enter" || event.key === " "){
+            event.preventDefault();
+            enterCyberCore();
+        }
+    });
+
+    introScreen.addEventListener("touchstart", function(){
+        enterCyberCore();
+    }, {passive:true});
+}
+
+</script>
+
+
+</body>
+
+</html>
